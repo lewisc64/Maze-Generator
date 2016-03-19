@@ -11,6 +11,7 @@
     Public open As New List(Of Cell)
 
     Public currentcell As Cell
+    Public previousdirection As Byte
 
     Public random As Random
 
@@ -64,7 +65,6 @@
         Dim done As Boolean
 
         done = False
-        donedirections.Clear()
         While Not done
 
             If donedirections.ToArray().Length = 4 Then
@@ -98,9 +98,15 @@
         grid.dirtycells.Add(grid.cells(donedirectionone.X, donedirectionone.Y))
         grid.dirtycells.Add(grid.cells(donedirection.X, donedirection.Y))
 
-        open.Add(grid.cells(donedirection.X, donedirection.Y))
+        If direction <> previousdirection Then
+            open.Add(grid.cells(currentcell.ix, currentcell.iy))
+        End If
+
+        'open.Add(grid.cells(donedirection.X, donedirection.Y))
 
         currentcell = grid.cells(donedirection.X, donedirection.Y)
+
+        previousdirection = direction
 
         Return True
 

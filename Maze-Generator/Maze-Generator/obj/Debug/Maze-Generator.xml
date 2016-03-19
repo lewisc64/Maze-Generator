@@ -6,7 +6,20 @@ Maze-Generator
 </name>
 </assembly>
 <members>
-<member name="F:Maze_Generator.VBGame.form">
+<member name="P:Maze_Generator.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:Maze_Generator.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:Maze_Generator.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="F:Maze_Generator.VBGame.form">
 	<summary>
  Game loop needs to be a thread.
  To use, the display must be set the the form's load event.
@@ -33,19 +46,6 @@ Maze-Generator
  Put in vbgame.getMouseEvents() loop.
  </summary>
 	<remarks></remarks>
-</member><member name="P:Maze_Generator.My.Resources.Resources.ResourceManager">
-	<summary>
-  Returns the cached ResourceManager instance used by this class.
-</summary>
-</member><member name="P:Maze_Generator.My.Resources.Resources.Culture">
-	<summary>
-  Overrides the current thread's CurrentUICulture property for all
-  resource lookups using this strongly typed resource class.
-</summary>
-</member><member name="T:Maze_Generator.My.Resources.Resources">
-	<summary>
-  A strongly-typed resource class, for looking up localized strings, etc.
-</summary>
 </member>
 </members>
 </doc>
