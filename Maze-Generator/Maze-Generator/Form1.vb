@@ -58,6 +58,7 @@ Public Class Form1
     Sub mazeloop()
 
         Dim fast As Boolean = False
+        Dim clockspeed As Integer = 30
 
         Dim frames As Integer = 0
 
@@ -67,6 +68,19 @@ Public Class Form1
         vbgame.fill(vbgame.black)
 
         While True
+
+            For Each e As MouseEvent In vbgame.getMouseEvents()
+                If e.action = MouseEvent.actions.scroll Then
+                    If e.button = MouseEvent.buttons.scrollUp Then
+                        clockspeed += 1
+                    Else
+                        If clockspeed > 1 Then
+                            clockspeed -= 1
+                        End If
+                    End If
+
+                End If
+            Next
 
             For Each e As KeyEventArgs In vbgame.getKeyDownEvents()
                 If e.KeyCode = Keys.R Then
@@ -78,7 +92,7 @@ Public Class Form1
                     fast = Not fast
 
                 ElseIf e.KeyCode = Keys.S Then
-                    vbgame.saveImage(InputBox("name: ") & ".png")
+                    vbgame.saveImage(vbgame.getImageFromDisplay(), InputBox("name: ") & ".png")
 
                 ElseIf e.KeyCode = Keys.Escape Then
                     Exit While
@@ -95,10 +109,10 @@ Public Class Form1
                 grid.drawDirtyCells(vbgame)
                 generator.drawOpen(vbgame)
                 vbgame.update()
-                vbgame.clockTick(30)
+                vbgame.clockTick(clockspeed)
             End If
 
-            
+
 
         End While
 

@@ -63,13 +63,19 @@
         Dim donedirectionone As Point
         Dim donedirections As New List(Of Byte)
         Dim done As Boolean
+        Dim backs As Integer
 
         done = False
+        backs = 0
         While Not done
 
             If donedirections.ToArray().Length = 4 Then
                 backtrack()
-                Return False
+                backs += 1
+                If backs >= open.ToArray().Length Then
+                    Return False
+                End If
+                donedirections.Clear()
             End If
 
             direction = random.Next(0, 4)
