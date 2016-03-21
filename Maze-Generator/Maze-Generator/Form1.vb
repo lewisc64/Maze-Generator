@@ -1,4 +1,4 @@
-﻿Imports System.Threading
+Imports System.Threading
 Public Class Form1
 
     Public thread As New Thread(AddressOf mainloop)
@@ -65,6 +65,8 @@ Public Class Form1
         Dim grid As New Grid(side, mazewidth, mazeheight, New Point(1, 1), New Point(mazewidth - 2, mazeheight - 2))
         Dim generator As New Generator(grid)
 
+        generator.draw = Not fast
+
         vbgame.fill(vbgame.black)
 
         While True
@@ -90,6 +92,12 @@ Public Class Form1
 
                 ElseIf e.KeyCode = Keys.F Then
                     fast = Not fast
+                    generator.draw = Not fast
+
+                    If Not fast Then
+                        grid.drawAllCells(vbgame)
+                        generator.drawAllOpen(vbgame)
+                    End If
 
                 ElseIf e.KeyCode = Keys.S Then
                     vbgame.saveImage(vbgame.getImageFromDisplay(), InputBox("name: ") & ".png")
@@ -106,13 +114,11 @@ Public Class Form1
                     vbgame.update()
                 End If
             Else
+                generator.drawDirtyOpen(vbgame)
                 grid.drawDirtyCells(vbgame)
-                generator.drawOpen(vbgame)
                 vbgame.update()
                 vbgame.clockTick(clockspeed)
             End If
-
-
 
         End While
 
