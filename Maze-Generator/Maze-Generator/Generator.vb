@@ -1,4 +1,4 @@
-﻿Public Class Generator
+Public Class Generator
 
     Enum directions
         up
@@ -15,22 +15,35 @@
 
     Public random As Random
 
+    Public draw As Boolean = True
+
     Public Sub New(ByRef usegrid)
         grid = usegrid
         open.Add(grid.cells(grid.startpoint.X, grid.startpoint.Y))
         currentcell = open(0)
 
-        grid.cells(grid.startpoint.X, grid.startpoint.Y).state = Cell.states.wall
+        grid.cells(grid.startpoint.X, grid.startpoint.Y).state = Cell.states.empty
         grid.cells(grid.finishpoint.X, grid.finishpoint.Y).state = Cell.states.wall
 
         random = New Random()
 
     End Sub
 
-    Public Sub drawOpen(ByRef vbgame As VBGame)
+    Public Sub drawAllOpen(ByRef vbgame As VBGame)
 
         For Each Cell As Cell In open
             vbgame.drawRect(Cell.getRect(), Color.FromArgb(0, 128, 0))
+        Next
+
+    End Sub
+
+    Public Sub drawDirtyOpen(ByRef vbgame As VBGame)
+
+        For Each Cell As Cell In open
+            If grid.dirtycells.Contains(Cell) Then
+                vbgame.drawRect(Cell.getRect(), Color.FromArgb(0, 128, 0))
+                grid.dirtycells.Remove(Cell)
+            End If
         Next
 
     End Sub
@@ -51,6 +64,9 @@
 
     Public Sub backtrack()
         open.Remove(currentcell)
+        If draw Then
+            grid.dirtycells.Add(currentcell)
+        End If
         Try
             currentcell = open(random.Next(0, open.ToArray().Length))
         Catch
@@ -59,6 +75,8 @@
 
     Public Function handle() As Boolean
         Dim direction As Byte
+        Dim checkdonedirection As Point
+        Dim checkdirection As Byte
         Dim donedirection As Point
         Dim donedirectionone As Point
         Dim donedirections As New List(Of Byte)
@@ -101,14 +119,34 @@
         grid.cells(donedirectionone.X, donedirectionone.Y).state = Cell.states.empty
         grid.cells(donedirection.X, donedirection.Y).state = Cell.states.empty
 
-        grid.dirtycells.Add(grid.cells(donedirectionone.X, donedirectionone.Y))
-        grid.dirtycells.Add(grid.cells(donedirection.X, donedirection.Y))
-
-        If direction <> previousdirection Then
-            open.Add(grid.cells(currentcell.ix, currentcell.iy))
+        If draw Then
+            grid.dirtycells.Add(grid.cells(donedirectionone.X, donedirectionone.Y))
+            grid.dirtycells.Add(grid.cells(donedirection.X, donedirection.Y))
         End If
 
-        'open.Add(grid.cells(donedirection.X, donedirection.Y))
+        If direction <> previousdirection Then
+            done = False
+            For checkdirection = 0 To 3
+                If checkdirection <> direction Then
+                    checkdonedirection = doDirection(checkdirection, currentcell.getIndexXY, 2)
+                    Try
+                        If grid.cells(checkdonedirection.X, checkdonedirection.Y).state = Cell.states.wall Then
+                            done = True
+                            Exit For
+                        End If
+                    Catch
+                    End Try
+                End If
+            Next
+
+            If done Then
+                open.Add(grid.cells(currentcell.ix, currentcell.iy))
+            End If
+
+            If draw Then
+                grid.dirtycells.Add(grid.cells(currentcell.ix, currentcell.iy))
+            End If
+        End If
 
         currentcell = grid.cells(donedirection.X, donedirection.Y)
 
